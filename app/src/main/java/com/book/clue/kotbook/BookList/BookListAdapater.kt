@@ -14,7 +14,12 @@ class BookListAdapater(val items: List<BookListItem>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
-        holder.title.setOnClickListener { listener(items[position].url) }
+        holder.title.setOnClickListener {
+            val pos = holder.adapterPosition
+            if (pos != RecyclerView.NO_POSITION) {
+                listener(items[pos].url)
+            }
+        }
     }
 
     override fun getItemCount() = items.size

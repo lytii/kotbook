@@ -55,7 +55,7 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val booklistAdapter = BookListAdapater(bookList, {v -> toast(v)})
+        val booklistAdapter = BookListAdapater(bookList, this::toast)
         recycler_view.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         recycler_view.adapter = booklistAdapter
     }
