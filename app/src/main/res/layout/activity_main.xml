@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.book.clue.kotbook.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:background="@color/colorPrimary"
+            android:id="@+id/nav_recent"
+            style="@style/NavBarButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/nav_recent" />
+
+        <TextView
+            android:background="@color/colorPrimary"
+            android:id="@+id/nav_favorite"
+            style="@style/NavBarButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/nav_favorite" />
+
+        <TextView
+            android:background="@color/colorPrimary"
+            android:id="@+id/nav_booklist"
+            style="@style/NavBarButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/nav_booklist" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_above="@id/nav_bar"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clipChildren="false">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
