@@ -16,6 +16,12 @@
         <item name="android:textAlignment">textStart</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
+        <item name="android:textColor">@color/whiteBG</item>
+    </style>
+
+    <style name="TextTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/whiteBG</item>
     </style>
 
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/chapter_item_layout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/colorPrimaryDark"
+              android:orientation="vertical">
+
+   <TextView
+      android:id="@+id/chapter_item_text_view"
+      style="@style/BookItem"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="2sp"
+      android:layout_marginEnd="2sp"
+      android:layout_marginStart="2sp"
+      android:layout_marginTop="2sp" />
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.book.clue.kotbook.BookList
+package com.book.clue.kotbook.booklist
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,8 +9,10 @@ import android.widget.ToggleButton
 import com.book.clue.kotbook.R
 import kotlinx.android.synthetic.main.book_list_layout.view.*
 
-class BookListAdapater(val items: List<BookListItem>,
-                       val listener: (String) -> Unit) : RecyclerView.Adapter<BookListAdapater.ViewHolder>() {
+class BookListAdapater(
+        val items: List<BookListItem>,
+        val listener: (String) -> Unit
+) : RecyclerView.Adapter<BookListAdapater.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
@@ -29,8 +31,8 @@ class BookListAdapater(val items: List<BookListItem>,
 
     class ViewHolder(bookView: View) : RecyclerView.ViewHolder(bookView) {
 
-        val title: TextView = itemView.title_text_view
-        val favorite: ToggleButton = itemView.favorite_toggle_button
+        val title: TextView = bookView.title_text_view
+        val favorite: ToggleButton = bookView.favorite_toggle_button
 
         fun bind(book: BookListItem) {
             title.text = book.bookTitle

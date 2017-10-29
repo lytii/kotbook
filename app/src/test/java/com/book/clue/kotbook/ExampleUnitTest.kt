@@ -1,8 +1,9 @@
 package com.book.clue.kotbook
 
+import com.book.clue.kotbook.booklist.BookListItem
+import com.book.clue.kotbook.util.Network
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -14,4 +15,18 @@ class ExampleUnitTest {
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
+
+
+    @Test
+    fun test_network() {
+        val network = Network()
+        network.getBookList(this::printList)
+    }
+
+    fun printList(list: List<BookListItem>) {
+        for (item in list) {
+            println("${item.bookTitle} ${item.url}")
+        }
+    }
+
 }

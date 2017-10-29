@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.book.clue.kotbook.BookListActivity">
+    tools:context="com.book.clue.kotbook.ChapterActivity">
 
     <LinearLayout
         android:id="@+id/nav_bar"
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/nav_recent" />
+            android:text="prev" />
 
         <TextView
             android:background="@color/colorPrimary"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/nav_favorite" />
+            android:text="jump" />
 
         <TextView
             android:background="@color/colorPrimary"
@@ -37,13 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/nav_booklist" />
+            android:text="next" />
 
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:layout_above="@id/nav_bar"
-        android:id="@+id/recycler_view"
+        android:id="@+id/paragraph_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin"
