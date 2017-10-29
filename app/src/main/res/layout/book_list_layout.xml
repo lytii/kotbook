@@ -10,7 +10,7 @@
    <TextView
       android:id="@+id/title_text_view"
       style="@style/BookItem"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
       android:layout_weight="1"
@@ -18,8 +18,9 @@
 
    <ToggleButton
       android:id="@+id/favorite_toggle_button"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_weight="6"
       android:layout_alignParentEnd="true"
       android:textOff="Not"
       android:textOn="Fav" />

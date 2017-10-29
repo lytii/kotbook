@@ -15,7 +15,6 @@
         android:layout_marginStart="@dimen/margin"
         android:layout_marginTop="@dimen/margin"
         android:clipChildren="false">
-
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

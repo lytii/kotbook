@@ -12,27 +12,27 @@
         android:background="@color/blackBG"
         android:layout_alignParentBottom="true">
 
-        <TextView
+        <Button
             android:background="@color/colorPrimary"
-            android:id="@+id/nav_recent"
+            android:id="@+id/nav_prev"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="prev" />
 
-        <TextView
+        <Button
             android:background="@color/colorPrimary"
-            android:id="@+id/nav_favorite"
+            android:id="@+id/nav_jump"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="jump" />
 
-        <TextView
+        <Button
             android:background="@color/colorPrimary"
-            android:id="@+id/nav_booklist"
+            android:id="@+id/nav_next"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

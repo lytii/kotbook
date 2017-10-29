@@ -1,7 +1,6 @@
 package com.book.clue.kotbook.util
 
 import com.book.clue.kotbook.booklist.BookListItem
-import com.book.clue.kotbook.booklist.BookNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
@@ -66,7 +65,7 @@ class Network {
             if (index > 0) {
                 text = text.substring(0, index)
             }
-            val MAX_TITLE_LENGTH = 32
+            val MAX_TITLE_LENGTH = 38
             if (text.length > MAX_TITLE_LENGTH) {
                 text = "${text.substring(0, MAX_TITLE_LENGTH - 2)}.."
             }

@@ -9,25 +9,27 @@ import android.widget.ToggleButton
 import com.book.clue.kotbook.R
 import kotlinx.android.synthetic.main.book_list_layout.view.*
 
-class BookListAdapater(
+class BookListAdapter(
         val items: List<BookListItem>,
         val listener: (String) -> Unit
-) : RecyclerView.Adapter<BookListAdapater.ViewHolder>() {
+) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
+    }
+
+    override fun getItemCount() = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val holder = ViewHolder(parent.inflate(R.layout.book_list_layout))
         holder.title.setOnClickListener {
             val pos = holder.adapterPosition
             if (pos != RecyclerView.NO_POSITION) {
                 listener(items[pos].url)
             }
         }
+        return holder
     }
-
-    override fun getItemCount() = items.size
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(parent.inflate(R.layout.book_list_layout))
 
     class ViewHolder(bookView: View) : RecyclerView.ViewHolder(bookView) {
 

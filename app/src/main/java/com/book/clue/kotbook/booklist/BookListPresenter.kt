@@ -1,5 +1,6 @@
 package com.book.clue.kotbook.booklist
 
+import com.book.clue.kotbook.util.BookNetwork
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
