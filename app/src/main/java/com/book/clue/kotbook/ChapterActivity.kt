@@ -6,6 +6,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.widget.LinearLayout
 import com.book.clue.kotbook.booklist.ChapterAdapter
 import com.book.clue.kotbook.util.Network
@@ -15,12 +18,11 @@ class ChapterActivity : Activity() {
     lateinit var view: RecyclerView
     val network = Network()
     lateinit var sharedPrefs: SharedPreferences
-
+    var showNav = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chapter)
-
 
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs), Context.MODE_PRIVATE)
         view = paragraph_list
@@ -28,7 +30,21 @@ class ChapterActivity : Activity() {
 
         val intent = intent
         val url = intent.getStringExtra(ChapterListActivity.EXTRA_CHAPTER_URL)
+        actionBar.isHideOnContentScrollEnabled = true
         getChapter(url)
+    }
+
+    fun toggleNavBar() {
+        if (showNav) {
+//            actionBar.hide()
+            nav_bar.visibility = View.GONE
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+//            actionBar.show()
+            nav_bar.visibility = View.VISIBLE
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
+        showNav = !showNav
     }
 
     fun getChapter(url: String) {
@@ -38,7 +54,6 @@ class ChapterActivity : Activity() {
 
     fun setChapter(paragraphList: ArrayList<String>) {
         title = paragraphList.removeAt(0)
-
         val size = paragraphList.size
 
         val prev_link = paragraphList.removeAt(size - 1)
@@ -50,6 +65,6 @@ class ChapterActivity : Activity() {
         if (last.contains("href")) {
             paragraphList.removeAt((paragraphList.size - 1))
         }
-        view.adapter = ChapterAdapter(paragraphList)
+        view.adapter = ChapterAdapter(paragraphList, this::toggleNavBar)
     }
 }

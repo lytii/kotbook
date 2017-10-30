@@ -86,7 +86,7 @@ class Network {
 
     @Throws(IOException::class)
     fun parseForChapter(toParse: Document): java.util.ArrayList<String> {
-        // parse response to get chapter text
+        // parse response to get chapter paragraph
         var chapterContent = toParse.select("div#chapterContent")
         if (chapterContent.size == 0)
         // backup parsing

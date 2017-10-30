@@ -8,12 +8,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.book.clue.kotbook.R
 import kotlinx.android.synthetic.main.chapter_item_layout.view.*
+import kotlin.reflect.KFunction0
 
 class ChapterAdapter(
-        val paragraphs: ArrayList<String>
+        val paragraphs: ArrayList<String>,
+        val listener: KFunction0<Unit>
 ) : RecyclerView.Adapter<ChapterAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(parent.inflate(R.layout.chapter_item_layout))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val holder = ViewHolder(parent.inflate(R.layout.chapter_item_layout))
+        holder.paragraph.setOnClickListener {
+            val pos = holder.adapterPosition
+            if (pos != RecyclerView.NO_POSITION)
+                listener()
+        }
+        return holder
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(paragraphs.get(position))
@@ -22,10 +31,10 @@ class ChapterAdapter(
     override fun getItemCount() = paragraphs.size
 
     class ViewHolder(chapterView: View) : RecyclerView.ViewHolder(chapterView) {
-        val text: TextView = chapterView.chapter_item_text_view
+        val paragraph: TextView = chapterView.chapter_item_text_view
 
         fun bind(paragraph: String) {
-            this.text.text = Html.fromHtml(paragraph)
+            this.paragraph.text = Html.fromHtml(paragraph)
         }
     }
 

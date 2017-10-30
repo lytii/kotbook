@@ -49,7 +49,12 @@ class ChapterListActivity : Activity() {
         val url = intent.getStringExtra(BookListActivity.EXTRA_BOOK_URL)
         if (url != null) {
             bookUrl = url
-            getChapterList(bookUrl)
+            var chapterList = sharedPrefs.getStringSet(url, null)
+            if (chapterList == null) {
+                getChapterList(bookUrl)
+            } else {
+
+            }
         }
     }
 
@@ -67,6 +72,4 @@ class ChapterListActivity : Activity() {
         intent.putExtra(EXTRA_CHAPTER_URL, url)
         startActivity(intent)
     }
-
-    fun toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
