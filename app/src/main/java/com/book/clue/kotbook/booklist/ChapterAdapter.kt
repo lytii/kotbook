@@ -16,6 +16,7 @@ class ChapterAdapter(
 ) : RecyclerView.Adapter<ChapterAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val holder = ViewHolder(parent.inflate(R.layout.chapter_item_layout))
+
         holder.paragraph.setOnClickListener {
             val pos = holder.adapterPosition
             if (pos != RecyclerView.NO_POSITION)
@@ -31,6 +32,7 @@ class ChapterAdapter(
     override fun getItemCount() = paragraphs.size
 
     class ViewHolder(chapterView: View) : RecyclerView.ViewHolder(chapterView) {
+
         val paragraph: TextView = chapterView.chapter_item_text_view
 
         fun bind(paragraph: String) {

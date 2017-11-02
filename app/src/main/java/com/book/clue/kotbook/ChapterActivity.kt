@@ -6,19 +6,22 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import com.book.clue.kotbook.booklist.ChapterAdapter
 import com.book.clue.kotbook.util.Network
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_chapter.*
+import java.util.concurrent.TimeUnit
 
 class ChapterActivity : Activity() {
     lateinit var view: RecyclerView
     val network = Network()
     lateinit var sharedPrefs: SharedPreferences
-    var showNav = true
+    var fullscreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,24 +30,26 @@ class ChapterActivity : Activity() {
         sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs), Context.MODE_PRIVATE)
         view = paragraph_list
         view.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-
         val intent = intent
         val url = intent.getStringExtra(ChapterListActivity.EXTRA_CHAPTER_URL)
-        actionBar.isHideOnContentScrollEnabled = true
         getChapter(url)
     }
 
-    fun toggleNavBar() {
-        if (showNav) {
-//            actionBar.hide()
+    fun toggleFullScreen() {
+        setFullScreen(fullscreen)
+    }
+
+    fun setFullScreen(isFullScreen: Boolean) {
+        if (isFullScreen) {
+            actionBar.hide()
             nav_bar.visibility = View.GONE
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         } else {
-//            actionBar.show()
+            actionBar.show()
             nav_bar.visibility = View.VISIBLE
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
-        showNav = !showNav
+        fullscreen = !isFullScreen
     }
 
     fun getChapter(url: String) {
@@ -65,6 +70,11 @@ class ChapterActivity : Activity() {
         if (last.contains("href")) {
             paragraphList.removeAt((paragraphList.size - 1))
         }
-        view.adapter = ChapterAdapter(paragraphList, this::toggleNavBar)
+        view.adapter = ChapterAdapter(paragraphList, this::toggleFullScreen)
+        Observable.just(true).delay(750, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(this::setFullScreen)
+                .subscribe()
     }
 }

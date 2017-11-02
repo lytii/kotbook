@@ -13,7 +13,6 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:background="@color/colorPrimary"
             android:id="@+id/nav_prev"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             android:text="prev" />
 
         <Button
-            android:background="@color/colorPrimary"
             android:id="@+id/nav_jump"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
@@ -31,7 +29,6 @@
             android:text="jump" />
 
         <Button
-            android:background="@color/colorPrimary"
             android:id="@+id/nav_next"
             style="@style/NavBarButton"
             android:layout_width="match_parent"
