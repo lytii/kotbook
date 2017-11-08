@@ -18,6 +18,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -34,6 +37,24 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
 
     implementation 'org.jsoup:jsoup:1.10.3'
+
+    implementation 'com.bluelinelabs:conductor:2.1.4'
+
+// If you want the components that go along with
+// Android's support libraries (currently just a PagerAdapter):
+//    implementation 'com.bluelinelabs:conductor-support:2.1.4'
+
+// If you want RxJava lifecycle support:
+    implementation 'com.bluelinelabs:conductor-rxlifecycle:2.1.4'
+
+// If you want RxJava2 lifecycle support:
+    implementation 'com.bluelinelabs:conductor-rxlifecycle2:2.1.4'
+
+// If you want RxJava2 Autodispose support:
+    implementation 'com.bluelinelabs:conductor-autodispose:2.1.4'
+
+// If you want Controllers that are Lifecycle-aware (architecture components):
+    implementation 'com.bluelinelabs:conductor-archlifecycle:0.1.1'
 
     testImplementation 'junit:junit:4.12'
 

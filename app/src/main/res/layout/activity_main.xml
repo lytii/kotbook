@@ -1,57 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.book.clue.kotbook.BookListActivity">
+<FrameLayout
+   xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   android:id="@+id/home_root"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blackBG"
-        android:layout_alignParentBottom="true">
 
-        <TextView
-            android:background="@color/colorPrimary"
-            android:id="@+id/nav_recent"
-            style="@style/NavBarButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/nav_recent" />
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+       android:id="@+id/controller_container"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       />
 
-        <TextView
-            android:background="@color/colorPrimary"
-            android:id="@+id/nav_favorite"
-            style="@style/NavBarButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/nav_favorite" />
-
-        <TextView
-            android:background="@color/colorPrimary"
-            android:id="@+id/nav_booklist"
-            style="@style/NavBarButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/nav_booklist" />
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_above="@id/nav_bar"
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginStart="@dimen/margin"
-        android:layout_marginTop="@dimen/margin"
-        android:clipChildren="false">
-
-    </android.support.v7.widget.RecyclerView>
-
-</RelativeLayout>
+</FrameLayout>

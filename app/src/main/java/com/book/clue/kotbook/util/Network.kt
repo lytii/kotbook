@@ -1,5 +1,6 @@
 package com.book.clue.kotbook.util
 
+import android.util.Log
 import com.book.clue.kotbook.booklist.BookListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -12,7 +13,16 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 
+
 class Network {
+
+    private object Holder {
+        val INSTANCE = Network()
+    }
+
+    companion object {
+        val instance: Network by lazy { Holder.INSTANCE }
+    }
 
     val bookNetwork: BookNetwork
     val WUXIA_URL = "http://www.wuxiaworld.com/"
@@ -37,6 +47,7 @@ class Network {
     }
 
     fun getChapterList(url: String, listener: (ArrayList<BookListItem>) -> Unit) {
+        Log.d("getChapterList", url)
         bookNetwork.getFromUrl(url)
                 .map(ResponseBody::string)
                 .map(Jsoup::parse)
@@ -46,6 +57,7 @@ class Network {
     }
 
     fun getChapter(url: String, listener: (ArrayList<String>) -> Unit) {
+        Log.d("getChapter", url)
         bookNetwork.getFromUrl(url)
                 .map(ResponseBody::string)
                 .map(Jsoup::parse)
@@ -78,8 +90,16 @@ class Network {
         val chapters = toParse.select("[itemprop=articleBody]").select("[href]")
         val linkList = ArrayList<BookListItem>()
         for (chapter in chapters) {
-            linkList.add(BookListItem(chapter.text(), chapter.attr("href")))
-
+            var text = chapter.text()
+            val chapterSubIndex = text.indexOf("Chapter ")
+            if (chapterSubIndex > 0) {
+                text = text.substring(chapterSubIndex + 8)
+            }
+            val MAX_TITLE_LENGTH = 34
+            if (text.length > MAX_TITLE_LENGTH) {
+                text = "${text.substring(0, MAX_TITLE_LENGTH - 2)}.."
+            }
+            linkList.add(BookListItem(text, chapter.attr("href")))
         }
         return linkList
     }
@@ -111,12 +131,13 @@ class Network {
         paragraphs.add(0, toParse.select("meta[property='og:title']").attr("content"))
 
         // add prev/next links to 0,1
-        val links = chapterContent.select("[href]")
-        if (links.size > 0) {
-            paragraphs.add(paragraphs.size, links[1].attr("href"))
-            paragraphs.add(paragraphs.size, links[0].attr("href"))
+        var links = chapterContent.select("[href]")
+        if (links.size == 0) {
+            chapterContent = toParse.select("div [itemprop='articleBody']")
+            links = chapterContent.select("[href]")
         }
-
+        paragraphs.add(paragraphs.size, links[1].attr("href"))
+        paragraphs.add(paragraphs.size, links[0].attr("href"))
         return paragraphs
     }
 
@@ -128,7 +149,8 @@ class Network {
             if (string != " "
                     && string != "<hr>"
                     && string != "<br>"
-                    && string != "&nbsp;") {
+                    && string != "&nbsp;"
+                    ) {
                 if (string.length == 0 && first) {
                     // second new line, don't add it
                     first = false
