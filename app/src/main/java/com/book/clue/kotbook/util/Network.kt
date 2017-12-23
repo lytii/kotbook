@@ -11,19 +11,9 @@ import org.jsoup.nodes.Node
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.IOException
 
 
 class Network {
-
-    private object Holder {
-        val INSTANCE = Network()
-    }
-
-    companion object {
-        val instance: Network by lazy { Holder.INSTANCE }
-    }
-
     val bookNetwork: BookNetwork
     val WUXIA_URL = "http://www.wuxiaworld.com/"
 
@@ -72,14 +62,11 @@ class Network {
         for (item in list) {
             var text = item.text()
             if (text.equals("About Us")) break
-            text = if (text.startsWith("[KR]")) text.substring(5) else text
+            text = if (text.startsWith("[KR]") || text.startsWith("[EN]"))
+                text.substring(5) else text
             val index = text.indexOf('(')
             if (index > 0) {
                 text = text.substring(0, index)
-            }
-            val MAX_TITLE_LENGTH = 38
-            if (text.length > MAX_TITLE_LENGTH) {
-                text = "${text.substring(0, MAX_TITLE_LENGTH - 2)}.."
             }
             linkList.add(BookListItem(text, item.attr("href")))
         }
@@ -95,16 +82,11 @@ class Network {
             if (chapterSubIndex > 0) {
                 text = text.substring(chapterSubIndex + 8)
             }
-            val MAX_TITLE_LENGTH = 34
-            if (text.length > MAX_TITLE_LENGTH) {
-                text = "${text.substring(0, MAX_TITLE_LENGTH - 2)}.."
-            }
             linkList.add(BookListItem(text, chapter.attr("href")))
         }
         return linkList
     }
 
-    @Throws(IOException::class)
     fun parseForChapter(toParse: Document): java.util.ArrayList<String> {
         // parse response to get chapter paragraph
         var chapterContent = toParse.select("div#chapterContent")
@@ -141,23 +123,19 @@ class Network {
         return paragraphs
     }
 
-    fun removeBlanks(nodes: List<Node>): java.util.ArrayList<String> {
+    private fun removeBlanks(nodes: List<Node>): java.util.ArrayList<String> {
         val paragraphs = java.util.ArrayList<String>()
         var first = false // to remove multiple new lines in a row
         for (node in nodes) {
             val string = node.toString().replace("<p[^>]+>|</p>|<p>".toRegex(), "")
-            if (string != " "
-                    && string != "<hr>"
-                    && string != "<br>"
-                    && string != "&nbsp;"
-                    ) {
-                if (string.length == 0 && first) {
+            if (string != " " && string != "<hr>" && string != "<br>" && string != "&nbsp;") {
+                if (string.isEmpty() && first) {
                     // second new line, don't add it
                     first = false
                 } else {
                     // first new line usually has 'some' meaning
-                    first = string.length == 0
-                    paragraphs.add(string.replace("&nbsp;".toRegex(), ""))
+                    first = string.isEmpty()
+                    paragraphs.add(string)
                 }
             }
         }

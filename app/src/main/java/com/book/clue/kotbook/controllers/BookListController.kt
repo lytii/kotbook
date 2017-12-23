@@ -5,23 +5,31 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
 import com.book.clue.kotbook.booklist.BookListItem
+import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import kotlinx.android.synthetic.main.activity_book_list.view.*
+import kotlinx.android.synthetic.main.activity_chapter.view.*
+import javax.inject.Inject
 
 class BookListController : Controller() {
 
-    val network = Network.instance
+    @Inject
+    lateinit var network: Network
+
     lateinit var booklistView: RecyclerView
     val title = "WuxiaWorld"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        var view = inflater.inflate(R.layout.activity_book_list, container, false)
+        DaggerNetworkComponent.builder().build().inject(this)
+
+        val view = inflater.inflate(R.layout.activity_book_list, container, false)
         booklistView = view.book_list
         booklistView.layoutManager = LinearLayoutManager(inflater.context)
         network.getBookList { bookItems -> createRecyclerView(bookItems) }

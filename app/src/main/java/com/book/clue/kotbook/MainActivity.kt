@@ -2,12 +2,16 @@ package com.book.clue.kotbook
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.controllers.BookListController
+import com.book.clue.kotbook.util.*
+import dagger.internal.Factory
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 class MainActivity : Activity() {
@@ -22,11 +26,14 @@ class MainActivity : Activity() {
 //    val network = Network()
 //    var relaunch = false
 //    lateinit var sharedPrefs: SharedPreferences
+    @Inject
+    lateinit var network: Network
     lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         val container = controller_container as ViewGroup
         router = Conductor.attachRouter(this, container, savedInstanceState);

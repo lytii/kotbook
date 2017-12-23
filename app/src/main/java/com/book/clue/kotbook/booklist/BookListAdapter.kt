@@ -35,11 +35,11 @@ class BookListAdapter(
     class ViewHolder(bookView: View) : RecyclerView.ViewHolder(bookView) {
 
         val title: TextView = bookView.title_text_view
-        val favorite: ToggleButton = bookView.favorite_toggle_button
+//        val favorite: ToggleButton = bookView.favorite_toggle_button
 
         fun bind(book: BookListItem) {
             title.text = book.bookTitle
-            favorite.isChecked = book.isFavorite
+//            favorite.isChecked = book.isFavorite
         }
     }
 

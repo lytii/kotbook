@@ -11,11 +11,13 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
 import com.book.clue.kotbook.booklist.BookListItem
+import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import kotlinx.android.synthetic.main.activity_book_list.view.*
+import javax.inject.Inject
 
 class ChapterListController(args: Bundle) : Controller() {
-    val network = Network.instance
+    @Inject lateinit var network: Network
     lateinit var chapterListView: RecyclerView
     val bookUrl: String = args.getString(BOOK_URL_KEY)
     val title: String = args.getString(TITLE_KEY)
@@ -35,11 +37,11 @@ class ChapterListController(args: Bundle) : Controller() {
             args.putString(url_key, url)
             return this
         }
-
         fun build() = args
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+        DaggerNetworkComponent.builder().build().inject(this)
         val view = inflater.inflate(R.layout.activity_book_list, container, false)
         chapterListView = view.book_list
         chapterListView.layoutManager = LinearLayoutManager(inflater.context)

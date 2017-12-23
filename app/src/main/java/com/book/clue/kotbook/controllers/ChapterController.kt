@@ -13,19 +13,23 @@ import com.bluelinelabs.conductor.Controller
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BundleBuilder
 import com.book.clue.kotbook.booklist.ChapterAdapter
+import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_chapter.view.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class ChapterController(args: Bundle) : Controller() {
     lateinit var paragraphListView: RecyclerView
     lateinit var navNextButton: Button
     lateinit var navPrevButton: Button
     lateinit var navBar: LinearLayout
-    val network = Network.instance
+
+    @Inject
+    lateinit var network: Network
     var fullscreen = true
     var chapterUrl = args.getString(CHAPTER_URL_KEY)
     var title = args.getString(TITLE_KEY)
@@ -43,6 +47,8 @@ class ChapterController(args: Bundle) : Controller() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+        DaggerNetworkComponent.builder().build().inject(this)
+
         val view = inflater.inflate(R.layout.activity_chapter, container, false)
         navBar = view.nav_bar
         navNextButton = view.nav_next
@@ -102,6 +108,4 @@ class ChapterController(args: Bundle) : Controller() {
         }
         fullscreen = !isFullScreen
     }
-
-
 }
