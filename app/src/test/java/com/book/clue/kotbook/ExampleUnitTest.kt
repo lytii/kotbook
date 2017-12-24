@@ -1,6 +1,6 @@
 package com.book.clue.kotbook
 
-import com.book.clue.kotbook.booklist.BookListItem
+import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.util.Network
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -20,10 +20,10 @@ class ExampleUnitTest {
     @Test
     fun test_network() {
         val network = Network()
-        network.getBookList(this::printList)
+//        network.getBookList(this::printList)
     }
 
-    fun printList(list: List<BookListItem>) {
+    fun printList(list: List<Book>) {
         for (item in list) {
             println("${item.bookTitle} ${item.url}")
         }

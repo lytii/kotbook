@@ -5,7 +5,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+class BookModule {
 
     @Provides
     @Singleton

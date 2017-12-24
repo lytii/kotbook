@@ -10,7 +10,7 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
-import com.book.clue.kotbook.booklist.BookListItem
+import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import kotlinx.android.synthetic.main.activity_book_list.view.*
@@ -54,7 +54,7 @@ class ChapterListController(args: Bundle) : Controller() {
         activity?.actionBar?.title = title
     }
 
-    fun showChapterList(chapterList: List<BookListItem>) {
+    fun showChapterList(chapterList: List<Book>) {
         chapterListView.adapter = BookListAdapter(chapterList, this::showChapter)
     }
 

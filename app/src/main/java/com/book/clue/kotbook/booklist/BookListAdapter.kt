@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.ToggleButton
 import com.book.clue.kotbook.R
+import com.book.clue.kotbook.db.Book
 import kotlinx.android.synthetic.main.book_list_layout.view.*
 import kotlin.reflect.KFunction2
 
 class BookListAdapter(
-        val items: List<BookListItem>,
+        val items: List<Book>,
         val listener: KFunction2<@ParameterName(name = "title") String, @ParameterName(name = "url") String, Unit>
 ) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
@@ -37,7 +37,7 @@ class BookListAdapter(
         val title: TextView = bookView.title_text_view
 //        val favorite: ToggleButton = bookView.favorite_toggle_button
 
-        fun bind(book: BookListItem) {
+        fun bind(book: Book) {
             title.text = book.bookTitle
 //            favorite.isChecked = book.isFavorite
         }
