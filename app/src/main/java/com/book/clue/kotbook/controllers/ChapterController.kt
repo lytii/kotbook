@@ -15,8 +15,11 @@ import com.book.clue.kotbook.booklist.BundleBuilder
 import com.book.clue.kotbook.booklist.ChapterAdapter
 import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_chapter.view.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ChapterController(args: Bundle) : Controller() {
@@ -102,12 +105,12 @@ class ChapterController(args: Bundle) : Controller() {
         paragraphListView.adapter = ChapterAdapter(paragraphList, this::toggleFullScreen)
 
 
-//        Observable.just(true)
-//                .delay(750, TimeUnit.MILLISECONDS)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .map(this::setFullScreen)
-//                .subscribe()
+        Observable.just(true)
+                .delay(750, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(this::setFullScreen)
+                .subscribe()
 
     }
 
