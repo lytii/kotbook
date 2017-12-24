@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.book.clue.kotbook.controllers.BookListController
 import com.book.clue.kotbook.util.*
-import dagger.internal.Factory
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -38,7 +38,9 @@ class MainActivity : Activity() {
         val container = controller_container as ViewGroup
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(BookListController()))
+            router.setRoot(RouterTransaction.with(BookListController())
+                    .pushChangeHandler(HorizontalChangeHandler())
+                    .popChangeHandler(HorizontalChangeHandler()))
         }
 //        sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs), Context.MODE_PRIVATE)
 //

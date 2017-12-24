@@ -108,4 +108,9 @@ class ChapterController(args: Bundle) : Controller() {
         }
         fullscreen = !isFullScreen
     }
+
+    override fun handleBack(): Boolean {
+        setFullScreen(false)
+        return super.handleBack()
+    }
 }

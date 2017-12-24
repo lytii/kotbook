@@ -35,7 +35,6 @@ class BookListAdapter(
     class ViewHolder(bookView: View) : RecyclerView.ViewHolder(bookView) {
 
         val title: TextView = bookView.title_text_view
-//        val favorite: ToggleButton = bookView.favorite_toggle_button
 
         fun bind(book: Book) {
             title.text = book.bookTitle

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
 import com.book.clue.kotbook.db.Book
@@ -93,7 +94,12 @@ class BookListController : Controller() {
     }
 
     fun showChapterList(title: String, url: String) {
-        router.pushController(RouterTransaction.with(ChapterListController(title, url)))
+        val changeController = ChapterListController(title, url)
+        router.pushController(
+                RouterTransaction.with(changeController)
+                        .pushChangeHandler(HorizontalChangeHandler())
+                        .popChangeHandler(HorizontalChangeHandler())
+        )
     }
 
 }

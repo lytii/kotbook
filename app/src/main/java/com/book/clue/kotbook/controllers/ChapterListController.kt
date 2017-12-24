@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
 import com.book.clue.kotbook.db.Book
@@ -59,6 +61,10 @@ class ChapterListController(args: Bundle) : Controller() {
     }
 
     fun showChapter(chapterTitle: String, chapterUrl: String) {
-        router.pushController(RouterTransaction.with(ChapterController(chapterTitle, chapterUrl)))
+        router.pushController(
+                RouterTransaction.with(ChapterController(chapterTitle, chapterUrl))
+                        .pushChangeHandler(VerticalChangeHandler())
+                        .popChangeHandler(VerticalChangeHandler())
+        )
     }
 }
