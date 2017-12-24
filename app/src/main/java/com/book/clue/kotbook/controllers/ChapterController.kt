@@ -15,11 +15,8 @@ import com.book.clue.kotbook.booklist.BundleBuilder
 import com.book.clue.kotbook.booklist.ChapterAdapter
 import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_chapter.view.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ChapterController(args: Bundle) : Controller() {
@@ -33,6 +30,7 @@ class ChapterController(args: Bundle) : Controller() {
     var fullscreen = true
     var chapterUrl = args.getString(CHAPTER_URL_KEY)
     var title = args.getString(TITLE_KEY)
+    var chapter: ArrayList<String> = ArrayList()
 
     companion object {
         val CHAPTER_URL_KEY = "ChapterController.ChapterUrl"
@@ -45,6 +43,12 @@ class ChapterController(args: Bundle) : Controller() {
                     .build()
     )
 
+    constructor(chapter: ArrayList<String>) : this(
+            BundleBuilder(Bundle()).build()
+    ) {
+        this.chapter = chapter
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         DaggerNetworkComponent.builder().build().inject(this)
@@ -55,7 +59,12 @@ class ChapterController(args: Bundle) : Controller() {
         navPrevButton = view.nav_prev
         paragraphListView = view.paragraph_list
         paragraphListView.layoutManager = LinearLayoutManager(inflater.context)
-        getChapter(chapterUrl)
+
+        if (chapter.isEmpty()) {
+            getChapter(chapterUrl)
+        } else {
+            showChapter(chapter)
+        }
         return view
     }
 
@@ -66,7 +75,16 @@ class ChapterController(args: Bundle) : Controller() {
 
     private fun getChapter(chapterUrl: String) {
         this.chapterUrl = chapterUrl
-        network.getChapter(chapterUrl, this::showChapter)
+        showLoading(true)
+        network.getChapter(chapterUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { showLoading(false) }
+                .subscribe(this::showChapter)
+    }
+
+    fun showLoading(isLoading: Boolean) {
+        if (isLoading) view?.chapter_loading_progress_bar?.visibility = View.VISIBLE
+        else view?.chapter_loading_progress_bar?.visibility = View.GONE
     }
 
     private fun showChapter(paragraphList: ArrayList<String>) {
@@ -84,11 +102,12 @@ class ChapterController(args: Bundle) : Controller() {
         paragraphListView.adapter = ChapterAdapter(paragraphList, this::toggleFullScreen)
 
 
-        Observable.just(true).delay(750, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(this::setFullScreen)
-                .subscribe()
+//        Observable.just(true)
+//                .delay(750, TimeUnit.MILLISECONDS)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(this::setFullScreen)
+//                .subscribe()
 
     }
 

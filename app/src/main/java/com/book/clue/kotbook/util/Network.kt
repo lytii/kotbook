@@ -24,7 +24,7 @@ class Network {
                 .create(BookNetwork::class.java)
     }
 
-    fun getBookList() : Single<List<Book>> {
+    fun getBookList(): Single<List<Book>> {
         return bookNetwork.getFromUrl(WUXIA_URL)
                 .map(ResponseBody::string)
                 .map(Jsoup::parse)
@@ -42,13 +42,11 @@ class Network {
                 .subscribe(listener)
     }
 
-    fun getChapter(url: String, listener: (ArrayList<String>) -> Unit) {
+    fun getChapter(url: String): Single<ArrayList<String>> {
         Log.d("getChapter", url)
-        bookNetwork.getFromUrl(url)
+        return bookNetwork.getFromUrl(url)
                 .map(ResponseBody::string)
                 .map(Jsoup::parse)
                 .map { Parser.parseForChapter(it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listener)
     }
 }

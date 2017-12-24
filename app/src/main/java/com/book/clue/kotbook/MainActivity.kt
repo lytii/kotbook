@@ -2,12 +2,15 @@ package com.book.clue.kotbook
 
 import android.app.Activity
 import android.os.Bundle
+import android.transition.Visibility
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import com.book.clue.kotbook.controllers.BookListController
 import com.book.clue.kotbook.util.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,7 +25,7 @@ class MainActivity : Activity() {
 //        val EXTRA_CHAPTER_URL = "com.book.clue.kotbook.chapterUrl"
     }
 
-//    lateinit var view: RecyclerView
+    //    lateinit var view: RecyclerView
 //    val network = Network()
 //    var relaunch = false
 //    lateinit var sharedPrefs: SharedPreferences
@@ -38,9 +41,7 @@ class MainActivity : Activity() {
         val container = controller_container as ViewGroup
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(BookListController())
-                    .pushChangeHandler(HorizontalChangeHandler())
-                    .popChangeHandler(HorizontalChangeHandler()))
+            router.setRoot(RouterTransaction.with(BookListController()))
         }
 //        sharedPrefs = getSharedPreferences(getString(R.string.shared_prefs), Context.MODE_PRIVATE)
 //

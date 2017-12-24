@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import com.book.clue.kotbook.R
-import com.book.clue.kotbook.booklist.BookListAdapter
+import com.book.clue.kotbook.booklist.ChapterListAdapter
 import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
 import javax.inject.Inject
 
@@ -39,6 +39,7 @@ class ChapterListController(args: Bundle) : Controller() {
             args.putString(url_key, url)
             return this
         }
+
         fun build() = args
     }
 
@@ -57,12 +58,29 @@ class ChapterListController(args: Bundle) : Controller() {
     }
 
     fun showChapterList(chapterList: List<Book>) {
-        chapterListView.adapter = BookListAdapter(chapterList, this::showChapter)
+//        chapterListView.adapter = BookListAdapter(chapterList, this::showChapter)
+        chapterListView.adapter = ChapterListAdapter(chapterList, this::getChapter)
     }
 
-    fun showChapter(chapterTitle: String, chapterUrl: String) {
+//    fun showChapter(chapterUrl: String, chapterTitle: String = "") {
+//        router.pushController(
+//                RouterTransaction.with(ChapterController(chapterTitle, chapterUrl))
+//                        .pushChangeHandler(VerticalChangeHandler())
+//                        .popChangeHandler(VerticalChangeHandler())
+//        )
+//    }
+
+    private fun getChapter(chapterUrl: String) {
+        view?.loading_progress_bar?.visibility = View.VISIBLE
+        network.getChapter(chapterUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::displayChapter)
+    }
+
+    private fun displayChapter(chapter: ArrayList<String>) {
+        view?.loading_progress_bar?.visibility = View.GONE
         router.pushController(
-                RouterTransaction.with(ChapterController(chapterTitle, chapterUrl))
+                RouterTransaction.with(ChapterController(chapter))
                         .pushChangeHandler(VerticalChangeHandler())
                         .popChangeHandler(VerticalChangeHandler())
         )
