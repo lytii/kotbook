@@ -28,7 +28,7 @@ class ChapterController(args: Bundle) : Controller() {
     lateinit var navPrevButton: Button
     lateinit var navBar: LinearLayout
 
-    @Inject
+//    @Inject
     lateinit var network: Network
     var fullscreen = true
     var chapterUrl = args.getString(CHAPTER_URL_KEY)
@@ -54,7 +54,8 @@ class ChapterController(args: Bundle) : Controller() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        NetworkComponent.get().inject(this)
+        NetworkComponent.get().
+                inject(this)
         val view = inflater.inflate(R.layout.activity_chapter, container, false)
 
         navBar = view.nav_bar

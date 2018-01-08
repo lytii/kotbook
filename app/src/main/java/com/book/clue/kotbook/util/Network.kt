@@ -10,8 +10,9 @@ import org.jsoup.Jsoup
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
-class Network {
+class Network @Inject constructor() {
     val bookNetwork: BookNetwork
     val WUXIA_URL = "http://www.wuxiaworld.com/"
 

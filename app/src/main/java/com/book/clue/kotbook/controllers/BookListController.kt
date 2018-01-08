@@ -2,7 +2,6 @@ package com.book.clue.kotbook.controllers
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,25 +9,19 @@ import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
+import com.book.clue.kotbook.managers.BookListManager
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
 import com.book.clue.kotbook.dagger.NetworkComponent
 import com.book.clue.kotbook.db.Book
-import com.book.clue.kotbook.db.BookDao
-import com.book.clue.kotbook.util.Network
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
 import javax.inject.Inject
 
 class BookListController : Controller() {
 
     @Inject
-    lateinit var network: Network
-
-    @Inject
-    lateinit var bookDao: BookDao
+    lateinit var listManager: BookListManager
 
     lateinit var booklistView: RecyclerView
     val title = "WuxiaWorld"
@@ -40,37 +33,10 @@ class BookListController : Controller() {
         booklistView = view.book_list
         booklistView.layoutManager = LinearLayoutManager(inflater.context)
 
-        bookDao.getAllBooks()
-                .subscribeOn(Schedulers.io())
+        listManager.getAllBooks()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    if (list != null && list.isNotEmpty()) {
-                        Log.d("not null", "llll")
-                        createRecyclerView(list)
-                    } else {
-                        Log.d("null", "llll")
-                        loadFromNetwork()
-                    }
-                })
+                .subscribe(this::displayBookList)
         return view
-    }
-
-    private fun loadFromNetwork() {
-        Log.d("loadfromNetwork", "llll")
-        network.getBookList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess {
-                    saveBooks(it)
-                }
-                .subscribe(this::createRecyclerView)
-    }
-
-    private fun saveBooks(bookList: List<Book>) {
-        Log.d("saveBooks", "llll")
-        Single.just(true)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe { _ -> bookDao.addAllBooks(*bookList.toTypedArray()) }
     }
 
     override fun onAttach(view: View) {
@@ -78,7 +44,7 @@ class BookListController : Controller() {
         activity?.actionBar?.title = title
     }
 
-    fun createRecyclerView(bookList: List<Book>) {
+    fun displayBookList(bookList: List<Book>) {
         booklistView.adapter = BookListAdapter(bookList, this::showChapterList)
     }
 

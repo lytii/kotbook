@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.activity_book_list.view.*
 import javax.inject.Inject
 
 class ChapterListController(args: Bundle) : Controller() {
-    @Inject lateinit var network: Network
+
+    @Inject
+    lateinit var network: Network
+
     lateinit var chapterListView: RecyclerView
     val bookUrl: String = args.getString(BOOK_URL_KEY)
     val title: String = args.getString(TITLE_KEY)

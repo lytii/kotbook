@@ -7,25 +7,21 @@ import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.controllers.BookListController
-import com.book.clue.kotbook.util.Network
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 
 class MainActivity : Activity() {
 
     companion object {
-        lateinit var instance: MainActivity
+        lateinit var context: MainActivity
     }
 
-    @Inject
-    lateinit var network: Network
     lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        instance = this
+        context = this
 
         val container = controller_container as ViewGroup
         router = Conductor.attachRouter(this, container, savedInstanceState);

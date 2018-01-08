@@ -8,7 +8,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(BookModule::class, ContextModule::class))
+@Component(modules = arrayOf(DatabaseModule::class))
 abstract class NetworkComponent {
 
     companion object {
@@ -19,7 +19,7 @@ abstract class NetworkComponent {
         companion object {
             val INSTANCE = DaggerNetworkComponent
                     .builder()
-                    .contextModule(ContextModule(MainActivity.instance))
+                    .contextModule(ContextModule(MainActivity.context))
                     .build()!!
         }
     }
