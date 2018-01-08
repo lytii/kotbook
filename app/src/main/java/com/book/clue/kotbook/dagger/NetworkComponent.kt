@@ -1,6 +1,5 @@
 package com.book.clue.kotbook.dagger
 
-import android.content.Context
 import com.book.clue.kotbook.MainActivity
 import com.book.clue.kotbook.controllers.BookListController
 import com.book.clue.kotbook.controllers.ChapterController
@@ -10,12 +9,23 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(BookModule::class, ContextModule::class))
-interface NetworkComponent {
+abstract class NetworkComponent {
 
-    fun context(): Context
+    companion object {
+        fun get(): NetworkComponent = SingletonHolder.INSTANCE
+    }
 
-    fun inject(bookListController: BookListController)
-    fun inject(chapterListController: ChapterListController)
-    fun inject(chapterController: ChapterController)
-    fun inject(mainActivity: MainActivity)
+    private class SingletonHolder {
+        companion object {
+            val INSTANCE = DaggerNetworkComponent
+                    .builder()
+                    .contextModule(ContextModule(MainActivity.instance))
+                    .build()!!
+        }
+    }
+
+    abstract fun inject(bookListController: BookListController)
+    abstract fun inject(chapterListController: ChapterListController)
+    abstract fun inject(chapterController: ChapterController)
+    abstract fun inject(mainActivity: MainActivity)
 }

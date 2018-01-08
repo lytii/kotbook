@@ -7,14 +7,16 @@ import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.controllers.BookListController
-import com.book.clue.kotbook.dagger.ContextModule
-import com.book.clue.kotbook.dagger.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
 class MainActivity : Activity() {
+
+    companion object {
+        lateinit var instance: MainActivity
+    }
 
     @Inject
     lateinit var network: Network
@@ -23,12 +25,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        DaggerNetworkComponent
-                .builder()
-                .contextModule(ContextModule(this))
-                .build()
-                .inject(this)
-
+        instance = this
 
         val container = controller_container as ViewGroup
         router = Conductor.attachRouter(this, container, savedInstanceState);
