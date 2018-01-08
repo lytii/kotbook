@@ -11,8 +11,9 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.ChapterListAdapter
+import com.book.clue.kotbook.dagger.ContextModule
+import com.book.clue.kotbook.dagger.DaggerNetworkComponent
 import com.book.clue.kotbook.db.Book
-import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
@@ -44,7 +45,11 @@ class ChapterListController(args: Bundle) : Controller() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        DaggerNetworkComponent.builder().build().inject(this)
+        DaggerNetworkComponent
+                .builder()
+                .contextModule(ContextModule(applicationContext!!))
+                .build()
+                .inject(this)
         val view = inflater.inflate(R.layout.activity_book_list, container, false)
         chapterListView = view.book_list
         chapterListView.layoutManager = LinearLayoutManager(inflater.context)
@@ -58,17 +63,8 @@ class ChapterListController(args: Bundle) : Controller() {
     }
 
     fun showChapterList(chapterList: List<Book>) {
-//        chapterListView.adapter = BookListAdapter(chapterList, this::showChapter)
         chapterListView.adapter = ChapterListAdapter(chapterList, this::getChapter)
     }
-
-//    fun showChapter(chapterUrl: String, chapterTitle: String = "") {
-//        router.pushController(
-//                RouterTransaction.with(ChapterController(chapterTitle, chapterUrl))
-//                        .pushChangeHandler(VerticalChangeHandler())
-//                        .popChangeHandler(VerticalChangeHandler())
-//        )
-//    }
 
     private fun getChapter(chapterUrl: String) {
         view?.loading_progress_bar?.visibility = View.VISIBLE

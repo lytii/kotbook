@@ -13,10 +13,11 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BookListAdapter
+import com.book.clue.kotbook.dagger.ContextModule
+import com.book.clue.kotbook.dagger.DaggerNetworkComponent
 import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.db.BookDao
 import com.book.clue.kotbook.db.BookDatabase
-import com.book.clue.kotbook.util.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +45,11 @@ class BookListController : Controller() {
             bookDao = bookDatabase?.bookDao()
         }
 
-        DaggerNetworkComponent.builder().build().inject(this)
+        DaggerNetworkComponent
+                .builder()
+                .contextModule(ContextModule(applicationContext!!))
+                .build()
+                .inject(this)
 
         val view = inflater.inflate(R.layout.activity_book_list, container, false)
         booklistView = view.book_list

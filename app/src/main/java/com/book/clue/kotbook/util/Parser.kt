@@ -44,7 +44,7 @@ class Parser {
             if (chapterContent.size == 0)
             // backup parsing
                 chapterContent = toParse.select("div [itemprop='articleBody']")
-            println(chapterContent)
+//            println(chapterContent)
             val all = chapterContent[0].childNodes()
 
             val paragraphs = removeBlanks(all)

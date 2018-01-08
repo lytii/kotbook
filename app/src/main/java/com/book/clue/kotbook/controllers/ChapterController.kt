@@ -13,7 +13,8 @@ import com.bluelinelabs.conductor.Controller
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BundleBuilder
 import com.book.clue.kotbook.booklist.ChapterAdapter
-import com.book.clue.kotbook.util.DaggerNetworkComponent
+import com.book.clue.kotbook.dagger.ContextModule
+import com.book.clue.kotbook.dagger.DaggerNetworkComponent
 import com.book.clue.kotbook.util.Network
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -54,7 +55,11 @@ class ChapterController(args: Bundle) : Controller() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        DaggerNetworkComponent.builder().build().inject(this)
+        DaggerNetworkComponent
+                .builder()
+                .contextModule(ContextModule(applicationContext!!))
+                .build()
+                .inject(this)
 
         val view = inflater.inflate(R.layout.activity_chapter, container, false)
         navBar = view.nav_bar
