@@ -1,6 +1,7 @@
 package com.book.clue.kotbook
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Conductor
@@ -24,7 +25,7 @@ class MainActivity : Activity() {
         context = this
 
         val container = controller_container as ViewGroup
-        router = Conductor.attachRouter(this, container, savedInstanceState);
+        router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(BookListController()))
         }
@@ -34,5 +35,10 @@ class MainActivity : Activity() {
         if (!router.handleBack()) {
             super.onBackPressed()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        data?.getStringExtra(getString(R.string.bookUrl))
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

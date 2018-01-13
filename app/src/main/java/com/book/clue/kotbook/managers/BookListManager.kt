@@ -26,7 +26,7 @@ class BookListManager @Inject constructor(val bookDao: BookDao, val network: Net
                 }
 
     fun getFromNetwork() =
-        network.getBookList()
+        network.getGravityBooklist()
                 .map { addAllBooks(it)  }
 
     fun addAllBooks(bookList: List<Book>): List<Book> {

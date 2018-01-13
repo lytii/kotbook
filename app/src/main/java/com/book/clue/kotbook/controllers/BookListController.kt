@@ -1,5 +1,8 @@
 package com.book.clue.kotbook.controllers
 
+import android.content.Intent
+import android.net.Uri
+import android.support.annotation.UiThread
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,6 +20,8 @@ import com.book.clue.kotbook.db.Book
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
 import javax.inject.Inject
+
+
 
 class BookListController : Controller() {
 
@@ -44,6 +49,7 @@ class BookListController : Controller() {
         activity?.actionBar?.title = title
     }
 
+    @UiThread
     fun displayBookList(bookList: List<Book>) {
         booklistView.adapter = BookListAdapter(bookList, this::showChapterList)
     }
@@ -59,6 +65,13 @@ class BookListController : Controller() {
                         .pushChangeHandler(HorizontalChangeHandler())
                         .popChangeHandler(HorizontalChangeHandler())
         )
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val url = data?.getStringExtra(activity?.getString(R.string.bookUrl)) ?: ""
+
+        router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

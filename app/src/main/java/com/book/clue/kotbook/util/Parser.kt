@@ -4,6 +4,8 @@ import com.book.clue.kotbook.db.Book
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Parser {
     companion object {
@@ -38,7 +40,20 @@ class Parser {
             return linkList
         }
 
-        fun parseForChapter(toParse: Document): java.util.ArrayList<String> {
+        fun parseForChapter(toParse: Document): MutableList<String> {
+            val list = toParse.select("div[id=chapterContent]")
+                    .select("p")
+                    .filter { it.text() != "" }
+                    .map { it.text() }
+                    .toMutableList()
+
+            val nav = toParse.select("div[class=btn-group btn-group-justified chapter-navigation]").select("a[class=btn btn-lg btn-link]")
+            list.add(nav[2].attr("href").toString())
+            list.add(nav[0].attr("href").toString())
+            return list
+        }
+
+        fun parseForWuxiaChapter(toParse: Document): java.util.ArrayList<String> {
             // parse response to get chapter paragraph
             var chapterContent = toParse.select("div#chapterContent")
             if (chapterContent.size == 0)

@@ -2,6 +2,9 @@ package com.book.clue.kotbook
 
 import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.util.Network
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -11,22 +14,30 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-
 
     @Test
-    fun test_network() {
-        val network = Network()
-//        network.getBookList(this::printList)
+    fun emptyTest() {
+        val list: List<String> = listOf()
+
+        Single.just(list)
+                .filter { it.isNotEmpty() }
+                .switchIfEmpty(Maybe.just(get()))
+                .subscribe { print(it) }
+
     }
 
-    fun printList(list: List<Book>) {
-        for (item in list) {
-            println("${item.bookTitle} ${item.url}")
-        }
+    @Test
+    fun rxtTest() {
+        val list: List<String> = listOf("tree")
+
+        Single.just(list)
+                .filter { it.isNotEmpty() }
+                .switchIfEmpty(Maybe.just(get()))
+                .subscribe { print(it) }
+
     }
 
+    fun get(): List<String> {
+        return listOf("get")
+    }
 }

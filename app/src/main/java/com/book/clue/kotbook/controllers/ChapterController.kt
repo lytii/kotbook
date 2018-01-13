@@ -1,5 +1,6 @@
 package com.book.clue.kotbook.controllers
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,6 +11,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.BundleBuilder
 import com.book.clue.kotbook.booklist.ChapterAdapter
@@ -28,12 +30,12 @@ class ChapterController(args: Bundle) : Controller() {
     lateinit var navPrevButton: Button
     lateinit var navBar: LinearLayout
 
-//    @Inject
+    @Inject
     lateinit var network: Network
     var fullscreen = true
     var chapterUrl = args.getString(CHAPTER_URL_KEY)
     var title = args.getString(TITLE_KEY)
-    var chapter: ArrayList<String> = ArrayList()
+    var chapter: MutableList<String> = ArrayList()
 
     companion object {
         val CHAPTER_URL_KEY = "ChapterController.ChapterUrl"
@@ -46,12 +48,11 @@ class ChapterController(args: Bundle) : Controller() {
                     .build()
     )
 
-    constructor(chapter: ArrayList<String>) : this(
+    constructor(chapter: MutableList<String>) : this(
             BundleBuilder(Bundle()).build()
     ) {
         this.chapter = chapter
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         NetworkComponent.get().
@@ -91,9 +92,10 @@ class ChapterController(args: Bundle) : Controller() {
         else view?.chapter_loading_progress_bar?.visibility = View.GONE
     }
 
-    private fun showChapter(paragraphList: ArrayList<String>) {
-        title = paragraphList.removeAt(0)
-        activity?.actionBar?.title = title
+    private fun showChapter(paragraphList: MutableList<String>) {
+//        title = paragraphList.removeAt(0)
+//        activity?.actionBar?.title = title
+        activity?.actionBar?.title = chapterUrl.split('/').last()
 
         val size = paragraphList.size
         navPrevButton.setOnClickListener { getChapter(paragraphList.removeAt(size - 1)) }

@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.chapter_item_layout.view.*
 import kotlin.reflect.KFunction0
 
 class ChapterAdapter(
-        val paragraphs: ArrayList<String>,
+        val paragraphs: MutableList<String>,
         val listener: KFunction0<Unit>
 ) : RecyclerView.Adapter<ChapterAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

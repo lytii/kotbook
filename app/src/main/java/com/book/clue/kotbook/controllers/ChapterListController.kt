@@ -17,6 +17,13 @@ import com.book.clue.kotbook.util.Network
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
 import javax.inject.Inject
+import android.content.Intent
+import android.net.Uri
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import com.book.clue.kotbook.MainActivity
+import com.book.clue.kotbook.WebActivity
+
 
 class ChapterListController(args: Bundle) : Controller() {
 
@@ -51,14 +58,36 @@ class ChapterListController(args: Bundle) : Controller() {
         val view = inflater.inflate(R.layout.activity_book_list, container, false)
         chapterListView = view.book_list
         chapterListView.layoutManager = LinearLayoutManager(inflater.context)
-        network.getChapterList(bookUrl, this::showChapterList)
+//        network.getChapterList(bookUrl)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(this::showChapterList)
+        showWeb()
         return view
+    }
+
+    fun showWeb() {
+        val b = Bundle()
+        b.putString("bookUrl", bookUrl)
+        var intent = Intent(activity, WebActivity::class.java)
+        intent.putExtras(b)
+        startActivityForResult(intent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var url = "404'"
+        if (data != null) {
+            url = data.extras.get(activity?.getString(R.string.bookUrl)).toString()
+        }
+        router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onAttach(view: View) {
         super.onAttach(view)
         activity?.actionBar?.title = title
     }
+
 
     fun showChapterList(chapterList: List<Book>) {
         chapterListView.adapter = ChapterListAdapter(chapterList, this::getChapter)
@@ -71,7 +100,7 @@ class ChapterListController(args: Bundle) : Controller() {
                 .subscribe(this::displayChapter)
     }
 
-    private fun displayChapter(chapter: ArrayList<String>) {
+    private fun displayChapter(chapter: MutableList<String>) {
         view?.loading_progress_bar?.visibility = View.GONE
         router.pushController(
                 RouterTransaction.with(ChapterController(chapter))

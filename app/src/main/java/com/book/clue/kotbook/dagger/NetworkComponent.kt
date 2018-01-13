@@ -4,6 +4,7 @@ import com.book.clue.kotbook.MainActivity
 import com.book.clue.kotbook.controllers.BookListController
 import com.book.clue.kotbook.controllers.ChapterController
 import com.book.clue.kotbook.controllers.ChapterListController
+import com.book.clue.kotbook.util.Network
 import dagger.Component
 import javax.inject.Singleton
 
@@ -23,6 +24,8 @@ abstract class NetworkComponent {
                     .build()!!
         }
     }
+
+    abstract fun network(): Network
 
     abstract fun inject(bookListController: BookListController)
     abstract fun inject(chapterListController: ChapterListController)
