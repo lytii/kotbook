@@ -97,9 +97,10 @@ class ChapterController(args: Bundle) : Controller() {
 //        activity?.actionBar?.title = title
         activity?.actionBar?.title = chapterUrl.split('/').last()
 
-        val size = paragraphList.size
-        navPrevButton.setOnClickListener { getChapter(paragraphList.removeAt(size - 1)) }
-        navNextButton.setOnClickListener { getChapter(paragraphList.removeAt(size - 2)) }
+        val prev = paragraphList.removeAt(paragraphList.lastIndex)
+        val next = paragraphList.removeAt(paragraphList.lastIndex)
+        navPrevButton.setOnClickListener { getChapter(prev) }
+        navNextButton.setOnClickListener { getChapter(next) }
 
         val last = paragraphList.get(paragraphList.size - 1)
         if (last.contains("href")) {
