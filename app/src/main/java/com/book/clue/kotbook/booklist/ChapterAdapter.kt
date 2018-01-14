@@ -1,7 +1,6 @@
 package com.book.clue.kotbook.booklist
 
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,7 @@ class ChapterAdapter(
         val paragraph: TextView = chapterView.chapter_item_text_view
 
         fun bind(paragraph: String) {
-            this.paragraph.text = Html.fromHtml(paragraph)
+            this.paragraph.text = paragraph
         }
     }
 

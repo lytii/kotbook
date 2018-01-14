@@ -50,6 +50,7 @@ class Parser {
             val nav = toParse.select("div[class=btn-group btn-group-justified chapter-navigation]").select("a[class=btn btn-lg btn-link]")
             list.add(nav[2].attr("href").toString())
             list.add(nav[0].attr("href").toString())
+            list.add(toParse.select("title").toString())
             return list
         }
 

@@ -94,15 +94,21 @@ class ChapterController(args: Bundle) : Controller() {
 
     private fun showChapter(paragraphList: MutableList<String>) {
 //        title = paragraphList.removeAt(0)
-//        activity?.actionBar?.title = title
-        activity?.actionBar?.title = chapterUrl.split('/').last()
+
+        title = paragraphList.removeAt(paragraphList.lastIndex)
+        var titleStart = title.indexOf("Chapter")
+        var titleEnd = title.lastIndexOf("-")
+        title = title.substring(titleStart, titleEnd)
+        activity?.actionBar?.title = title
+        paragraphList.add(0, title.split("-")[1])
+        paragraphList.add(1, "-----------------------------")
 
         val prev = paragraphList.removeAt(paragraphList.lastIndex)
         val next = paragraphList.removeAt(paragraphList.lastIndex)
         navPrevButton.setOnClickListener { getChapter(prev) }
         navNextButton.setOnClickListener { getChapter(next) }
 
-        val last = paragraphList.get(paragraphList.size - 1)
+        val last = paragraphList[paragraphList.size - 1]
         if (last.contains("href")) {
             paragraphList.removeAt((paragraphList.size - 1))
         }

@@ -23,6 +23,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.book.clue.kotbook.MainActivity
 import com.book.clue.kotbook.WebActivity
+import com.book.clue.kotbook.util.CHAPTER_LIST_WEB_REQUEST
 
 
 class ChapterListController(args: Bundle) : Controller() {
@@ -70,15 +71,11 @@ class ChapterListController(args: Bundle) : Controller() {
         b.putString("bookUrl", bookUrl)
         var intent = Intent(activity, WebActivity::class.java)
         intent.putExtras(b)
-        startActivityForResult(intent, 0)
+        startActivityForResult(intent, CHAPTER_LIST_WEB_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        var url = "404'"
-        if (data != null) {
-            url = data.extras.get(activity?.getString(R.string.bookUrl)).toString()
-        }
+        val url = data?.extras?.get(activity?.getString(R.string.bookUrl)).toString() ?: "404"
         router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
         super.onActivityResult(requestCode, resultCode, data)
     }
