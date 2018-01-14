@@ -1,5 +1,6 @@
 package com.book.clue.kotbook.controllers
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -75,8 +76,12 @@ class ChapterListController(args: Bundle) : Controller() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val url = data?.extras?.get(activity?.getString(R.string.bookUrl)).toString() ?: "404"
-        router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
+        if (resultCode == RESULT_OK) {
+            val url = data?.extras?.get(activity?.getString(R.string.bookUrl)).toString() ?: "404"
+            router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
+        } else {
+            router.popCurrentController()
+        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
