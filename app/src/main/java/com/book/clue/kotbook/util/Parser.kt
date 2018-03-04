@@ -4,7 +4,6 @@ import com.book.clue.kotbook.db.Book
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Parser {
@@ -21,7 +20,7 @@ class Parser {
                 if (index > 0) {
                     text = text.substring(0, index)
                 }
-                linkList.add(Book(text, item.attr("href")))
+//                linkList.add(Book(text, item.attr("href")))
             }
             return linkList
         }
@@ -35,7 +34,7 @@ class Parser {
                 if (chapterSubIndex > 0) {
                     text = text.substring(chapterSubIndex + 8)
                 }
-                linkList.add(Book(text, chapter.attr("href")))
+//                linkList.add(Book(text, chapter.attr("href")))
             }
             return linkList
         }

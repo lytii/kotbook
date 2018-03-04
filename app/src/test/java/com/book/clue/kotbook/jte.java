@@ -17,7 +17,7 @@ public class jte {
    @Test
    public void test() {
       Network network = new Network();
-      network.getBookNetwork()
+      network.getWBookApi()
              .getFromUrl("http://gravitytales.com/")
              .map(ResponseBody::string)
              .map(Jsoup::parse)

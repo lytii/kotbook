@@ -1,8 +1,6 @@
 package com.book.clue.kotbook.db
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import io.reactivex.Single
 
 @Dao
@@ -17,7 +15,6 @@ interface BookDao {
     @Insert
     fun addAllBooks(vararg books: Book)
 
-    @Query("SELECT * FROM Book WHERE bookTitle LIKE :bookTitle")
-    fun getBookByTitle(bookTitle: String): Book
-
+    @Query("SELECT * FROM Book WHERE name LIKE :name")
+    fun getBookByTitle(name: String): Book
 }

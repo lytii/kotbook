@@ -6,15 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.book.clue.kotbook.R
-import com.book.clue.kotbook.db.Book
+import com.book.clue.kotbook.db.Chapter
 import kotlinx.android.synthetic.main.book_list_layout.view.*
-import kotlin.reflect.KFunction
 import kotlin.reflect.KFunction1
-import kotlin.reflect.KFunction2
 
 class ChapterListAdapter(
-        val items: List<Book>,
-        val listener: KFunction1<@ParameterName(name = "url") String, Unit>
+        val items: List<Chapter>,
+        val listener: KFunction1<@ParameterName(name = "chapterId") Int, Unit>
 ) : RecyclerView.Adapter<ChapterListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -28,7 +26,7 @@ class ChapterListAdapter(
         holder.title.setOnClickListener {
             val pos = holder.adapterPosition
             if (pos != RecyclerView.NO_POSITION) {
-                listener(items[pos].url)
+                listener(items[pos].id)
             }
         }
         return holder
@@ -38,9 +36,8 @@ class ChapterListAdapter(
 
         val title: TextView = bookView.title_text_view
 
-        fun bind(book: Book) {
-            title.text = book.bookTitle
-//            favorite.isChecked = book.isFavorite
+        fun bind(chapter: Chapter) {
+            title.text = chapter.title
         }
     }
 

@@ -1,11 +1,7 @@
 package com.book.clue.kotbook
 
-import com.book.clue.kotbook.db.Book
-import com.book.clue.kotbook.util.Network
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

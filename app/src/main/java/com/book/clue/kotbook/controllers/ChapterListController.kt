@@ -1,6 +1,5 @@
 package com.book.clue.kotbook.controllers
 
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,41 +13,37 @@ import com.book.clue.kotbook.R
 import com.book.clue.kotbook.booklist.ChapterListAdapter
 import com.book.clue.kotbook.dagger.NetworkComponent
 import com.book.clue.kotbook.db.Book
-import com.book.clue.kotbook.util.Network
+import com.book.clue.kotbook.db.Chapter
+import com.book.clue.kotbook.db.ChapterParagraph
+import com.book.clue.kotbook.managers.BookListManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_book_list.view.*
+import java.io.Serializable
 import javax.inject.Inject
-import android.content.Intent
-import android.net.Uri
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import com.book.clue.kotbook.MainActivity
-import com.book.clue.kotbook.WebActivity
-import com.book.clue.kotbook.util.CHAPTER_LIST_WEB_REQUEST
 
 
 class ChapterListController(args: Bundle) : Controller() {
 
     @Inject
-    lateinit var network: Network
+    lateinit var bookListManager: BookListManager
 
     lateinit var chapterListView: RecyclerView
-    val bookUrl: String = args.getString(BOOK_URL_KEY)
-    val title: String = args.getString(TITLE_KEY)
+    val book: Book = args.getSerializable(BOOK_KEY) as Book
 
     companion object {
-        val BOOK_URL_KEY = "ChapterListController.BookUrl"
-        val TITLE_KEY = "ChapterListController.Title"
+        val BOOK_KEY = "ChapterListController.BOOK"
     }
 
-    constructor(title: String, url: String) : this(
-            BundleBuilder(Bundle()).putString(BOOK_URL_KEY, url)
-                    .putString(TITLE_KEY, title)
-                    .build())
+    constructor(book: Book) : this(
+            BundleBuilder(
+                    Bundle())
+                    .putBook(book)
+                    .build()
+    )
 
     class BundleBuilder(val args: Bundle) {
-        fun putString(url_key: String, url: String): BundleBuilder {
-            args.putString(url_key, url)
+        fun putBook(book: Book): BundleBuilder {
+            args.putSerializable(BOOK_KEY, book as Serializable)
             return this
         }
 
@@ -60,49 +55,34 @@ class ChapterListController(args: Bundle) : Controller() {
         val view = inflater.inflate(R.layout.activity_book_list, container, false)
         chapterListView = view.book_list
         chapterListView.layoutManager = LinearLayoutManager(inflater.context)
-//        network.getChapterList(bookUrl)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(this::showChapterList)
-        showWeb()
+        getChapterList()
         return view
-    }
-
-    fun showWeb() {
-        val b = Bundle()
-        b.putString("bookUrl", bookUrl)
-        var intent = Intent(activity, WebActivity::class.java)
-        intent.putExtras(b)
-        startActivityForResult(intent, CHAPTER_LIST_WEB_REQUEST)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) {
-            val url = data?.extras?.get(activity?.getString(R.string.bookUrl)).toString() ?: "404"
-            router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
-        } else {
-            router.popCurrentController()
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        activity?.actionBar?.title = title
+        activity?.actionBar?.title = book.name
     }
 
+    private fun getChapterList() {
+        bookListManager
+        .getChapterList(book.id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::showChapterList)
+    }
 
-    fun showChapterList(chapterList: List<Book>) {
+    private fun showChapterList(chapterList: List<Chapter>) {
         chapterListView.adapter = ChapterListAdapter(chapterList, this::getChapter)
     }
 
-    private fun getChapter(chapterUrl: String) {
+    private fun getChapter(chapterId: Int) {
         view?.loading_progress_bar?.visibility = View.VISIBLE
-        network.getChapter(chapterUrl)
+        bookListManager.getChapter(chapterId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayChapter)
     }
 
-    private fun displayChapter(chapter: MutableList<String>) {
+    private fun displayChapter(chapter: ChapterParagraph) {
         view?.loading_progress_bar?.visibility = View.GONE
         router.pushController(
                 RouterTransaction.with(ChapterController(chapter))

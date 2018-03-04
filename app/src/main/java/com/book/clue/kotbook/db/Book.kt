@@ -2,14 +2,17 @@ package com.book.clue.kotbook.db
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 @Entity
-data class Book (var bookTitle: String = "NO_TITLE", var url: String = "")
-    : Comparable<Book> {
+data class Book(
+        @SerializedName("Id") @PrimaryKey() val id: Int,
+        @SerializedName("Name") val name: String,
+        @SerializedName("CoverUrl") val coverUrl: String,
+        @SerializedName("Slug") var url: String
+) : Serializable, Comparable<Book> {
     override fun compareTo(other: Book): Int {
-        return bookTitle.compareTo(other.bookTitle)
+        return name.compareTo(other.name)
     }
-
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
 }

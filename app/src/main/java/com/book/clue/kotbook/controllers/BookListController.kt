@@ -1,7 +1,6 @@
 package com.book.clue.kotbook.controllers
 
 import android.content.Intent
-import android.net.Uri
 import android.support.annotation.UiThread
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -51,28 +50,19 @@ class BookListController : Controller() {
 
     @UiThread
     fun displayBookList(bookList: List<Book>) {
-        booklistView.adapter = BookListAdapter(bookList, this::showChapterList)
+        booklistView.adapter = BookListAdapter(bookList.sorted(), this::showChapterList)
     }
 
     fun toast(message: String) {
         Toast.makeText(this.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun showChapterList(title: String, url: String) {
-        val changeController = ChapterListController(title, url)
+    fun showChapterList(book: Book) {
+        val changeController = ChapterListController(book)
         router.pushController(
                 RouterTransaction.with(changeController)
                         .pushChangeHandler(HorizontalChangeHandler())
                         .popChangeHandler(HorizontalChangeHandler())
         )
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val url = data?.getStringExtra(activity?.getString(R.string.bookUrl)) ?: ""
-
-        router.pushController(RouterTransaction.with(ChapterController("Chapter", url)))
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
 }

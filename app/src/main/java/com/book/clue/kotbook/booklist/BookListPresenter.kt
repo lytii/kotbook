@@ -1,15 +1,15 @@
 package com.book.clue.kotbook.booklist
 
-import com.book.clue.kotbook.util.BookNetwork
+import com.book.clue.kotbook.util.WBookApi
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class BookListPresenter (
 //        val activty: Activity,
-//        var bookNetwork: Network
+//        var wBookApi: Network
 ) {
-    var bookNetwork: BookNetwork
+    var bookNetwork: WBookApi
     init {
         bookNetwork = buildRetroFit()
     }
@@ -19,7 +19,7 @@ class BookListPresenter (
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(BookNetwork::class.java)
+            .create(WBookApi::class.java)
 
     fun getBookList() {
         bookNetwork.getFromUrl("https://www.wuxiaworld.com/").subscribe()

@@ -5,13 +5,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
-import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.db.BookDao
 import com.book.clue.kotbook.db.BookDatabase
 import org.junit.Before
-import org.junit.After
 import org.junit.Assert
-import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)
@@ -58,15 +55,15 @@ class DBTest {
 
     @Test
     fun getBook() {
-        val bookA = Book(url = "url a", bookTitle = "Book_A")
-        val bookB = Book(url = "url b", bookTitle = "Book_B")
+        val bookA = Book(url = "url a", title = "Book_A")
+        val bookB = Book(url = "url b", title = "Book_B")
 
         bookDao.addAllBooks(bookA)
 
-        var book = bookDao.getBookByTitle(bookA.bookTitle)
-        Assert.assertEquals(book.bookTitle, bookA.bookTitle)
+        var book = bookDao.getBookByTitle(bookA.title)
+        Assert.assertEquals(book.title, bookA.title)
 
-        book = bookDao.getBookByTitle(bookB.bookTitle)
+        book = bookDao.getBookByTitle(bookB.title)
         Assert.assertEquals(book, null)
     }
 }

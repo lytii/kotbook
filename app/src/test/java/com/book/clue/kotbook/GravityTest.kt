@@ -1,52 +1,56 @@
 package com.book.clue.kotbook
 
 import com.book.clue.kotbook.db.Book
+import com.book.clue.kotbook.util.ChapterContent
 import com.book.clue.kotbook.util.Network
-import com.book.clue.kotbook.util.Parser
+import com.google.gson.Gson
+import io.reactivex.Observable
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 import org.junit.Test
 
 class GravityTest {
 
     @Test
-    fun testGravityTales() {
-        val network = Network()
-        val list = network.bookNetwork
-                .getFromUrl("http://gravitytales.com/")
-                .map(ResponseBody::string)
-                .map(Jsoup::parse)
-                .map { it.select("a[href]") }
-                .map { list -> list.filter { it.attr("href").startsWith("/novel") } }
-                .map { it.sortedBy { it.attr("href") } }
+    fun bookApi() {
+//        val coverBase = "https://cdn.gravitytales.com/images/covers/"
+        val myString = Network().getBookListN()
                 .blockingGet()
-        listOf(1, 2).sorted()
-//        network.getBookList()
-//                .subscribe { list -> abc(list)  }
-    }
-
-    @Test
-    fun network() {
-//        var baseUrl = "http://gravitytales.com/"
-        val list = Network()
-                .getBookList()
-//                .bookNetwork.getFromUrl(baseUrl)
+        print(myString)
 //                .map(ResponseBody::string)
-//                .map(Jsoup::parse)
-//                .map { Parser.parseForBookList(it) }
-//                .map(Collection<Book>::sorted)
-                .blockingGet()
-        print(list)
+//                .map { Gson().fromJson(it, Array<Book>::class.java).asList() }
+//                .blockingGet()
+//        print(myString)
     }
 
     @Test
-    fun chap() {
-        val chap = Network()
-                .getChapter("http://gravitytales.com/Novel/mmorpg-rebirth-of-the-legendary-guardian/rlg-chapter-1")
+    fun groupsApi() {
+        val myString: List<Book> = Network().getBookListN().blockingGet()
+        val book: Book = myString.find { it.name.contains("Guardian", true) }
+                ?: Book(1, "", "", "")
+
+        val chapterGroup = Network().getChapterList(book.id)
                 .blockingGet()
-        print(chap)
+        chapterGroup.forEach { println("C: $it") }
+
+        Observable
+                .just(1, 2, 3)
+                .flatMap { Observable.just(it * 10, it * 100) }
+                .subscribe { println("D: $it") }
     }
 
-
+    @Test
+    fun chapterApi() {
+        val chapterId = 22328
+        val string = Network().wBookApi.getChapter(chapterId)
+                .map(ResponseBody::string)
+                .blockingFirst()
+        val c = Gson().fromJson(string, ChapterContent::class.java)
+        val text = Jsoup.parseBodyFragment(c.content)
+                .body()
+                .select("p")
+                .map { it.text() }
+                .filter { it != "" }
+        println("E: $text")
+    }
 }

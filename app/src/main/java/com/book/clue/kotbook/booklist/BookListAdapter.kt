@@ -8,11 +8,11 @@ import android.widget.TextView
 import com.book.clue.kotbook.R
 import com.book.clue.kotbook.db.Book
 import kotlinx.android.synthetic.main.book_list_layout.view.*
-import kotlin.reflect.KFunction2
+import kotlin.reflect.KFunction1
 
 class BookListAdapter(
         val items: List<Book>,
-        val listener: KFunction2<@ParameterName(name = "title") String, @ParameterName(name = "url") String, Unit>
+        val listener: KFunction1<@ParameterName(name = "book") Book, Unit>
 ) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -26,7 +26,7 @@ class BookListAdapter(
         holder.title.setOnClickListener {
             val pos = holder.adapterPosition
             if (pos != RecyclerView.NO_POSITION) {
-                listener(items[pos].bookTitle, items[pos].url)
+                listener(items[pos])
             }
         }
         return holder
@@ -37,7 +37,7 @@ class BookListAdapter(
         val title: TextView = bookView.title_text_view
 
         fun bind(book: Book) {
-            title.text = book.bookTitle
+            title.text = book.name
 //            favorite.isChecked = book.isFavorite
         }
     }
