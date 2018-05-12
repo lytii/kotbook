@@ -10,7 +10,9 @@ data class Book(
         @SerializedName("Id") @PrimaryKey() val id: Int,
         @SerializedName("Name") val name: String,
         @SerializedName("CoverUrl") val coverUrl: String,
-        @SerializedName("Slug") var url: String
+        @SerializedName("Slug") var url: String,
+        var synposis: String,
+        var description: String
 ) : Serializable, Comparable<Book> {
     override fun compareTo(other: Book): Int {
         return name.compareTo(other.name)

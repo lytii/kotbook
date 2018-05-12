@@ -28,40 +28,55 @@ class BookListManager @Inject constructor(val bookDao: BookDao,
                     .map { it.sorted() }
 
     fun getFromNetwork() =
-            network.getGravityBooklist()
+            network.getWuxiaBookList()
                     .doOnSuccess { addAllBooks(it) }
 
-    fun getChapterList(bookId: Int): Single<List<Chapter>> =
-            chapterDao.getChapterList(bookId)
+    fun getChapterList(book: Book): Single<List<Chapter>> =
+            chapterDao.getChapterList(book.id)
                     .subscribeOn(Schedulers.io())
                     .flatMap { list ->
                         if (list.isEmpty()) {
                             Log.d("Chapter", "loading from network")
-                            getChapterListFromNetwork(bookId)
+                            getChapterListFromNetwork(book)
                         } else {
                             Log.d("Chapter", "loading from db")
-                            Single.just(list)
+                            Single.just(list.sortedBy { it.number })
                         }
                     }
                     .doOnError { Log.e("", it.toString()) }
 
-    fun getChapter(chapterId: Int): Single<ChapterParagraph> =
-            chapterDao.getChapterById(chapterId)
+    fun getChapter(chapter: Chapter): Single<ChapterParagraph> =
+            chapterDao.getChapterById(chapter.id)
                     .subscribeOn(Schedulers.io())
                     .flatMap {
-                        if (it.chapterParagraphs.isEmpty()) {
-                            getChapterFromNetwork(chapterId)
+                        if (it.paragraphs.isEmpty()) {
+                            getChapterFromNetwork(chapter)
                         } else {
                             Single.just(it)
                         }
                     }
+    fun getChapterByUrl(url: String): Single<ChapterParagraph> {
+        return chapterDao.getChapterByUrl(url)
+            .subscribeOn(Schedulers.io())
+            .flatMap {
+                if (it.paragraphs.isEmpty()) {
+                    getChapterFromNetwork(it.chapter)
+                } else {
+                    Single.just(it)
+                }
+            }
+    }
 
+    fun getChapterById(id: Int): Single<Chapter> {
+        return chapterDao.getChapterById(id)
+            .map { it.chapter }
+    }
 
     private fun addAllBooks(bookList: List<Book>): Unit =
             bookDao.addAllBooks(*bookList.toTypedArray())
 
-    private fun getChapterListFromNetwork(bookId: Int): Single<List<Chapter>> =
-            network.getChapterList(bookId)
+    private fun getChapterListFromNetwork(book: Book): Single<List<Chapter>> =
+            network.getWuxiaChapterList(book)
                     .doOnSuccess { addChapters(it) }
 
     private fun addChapters(chapterList: List<Chapter>) {
@@ -69,13 +84,37 @@ class BookListManager @Inject constructor(val bookDao: BookDao,
         chapterDao.addChapters(*chapterList.toTypedArray())
     }
 
-    private fun getChapterFromNetwork(chapterId: Int) =
-            network.getChapter(chapterId)
+//    private fun getChapterFromNetwork(id: Int): Single<ChapterParagraph> =
+//            network.getWuxiaChapter(id)
+//                    .map {
+//                        it.forEachIndexed { index, paragraph ->
+//                            chapterDao.addParagraph(
+//                                Paragraph(id * 1000 + index, id, index, paragraph))
+//                        }
+//                        chapterDao.update(chapter)
+//                    }
+//                    .flatMap { chapterDao.getChapterById(chapter.id) }
+
+    private fun getChapterFromNetwork(chapter: Chapter): Single<ChapterParagraph> =
+            network.getWuxiaChapter(chapter)
                     .map {
                         it.forEachIndexed { index, paragraph ->
                             chapterDao.addParagraph(
-                                    Paragraph(chapterId * 1000 + index, chapterId, index, paragraph))
+                                Paragraph(chapter.id * 1000 + index, chapter.id, index, paragraph))
                         }
+                        chapterDao.update(chapter)
                     }
-                    .flatMap { chapterDao.getChapterById(chapterId) }
+                    .flatMap { chapterDao.getChapterById(chapter.id) }
+
+    fun getChapterByNumber(number: Float, bookId: Int): Single<ChapterParagraph> {
+        return chapterDao.getChapterByNumber(number, bookId)
+                .subscribeOn(Schedulers.io())
+                .flatMap {
+                    if (it.paragraphs.isEmpty()) {
+                        getChapterFromNetwork(it.chapter)
+                    } else {
+                        Single.just(it)
+                    }
+                }
+    }
 }

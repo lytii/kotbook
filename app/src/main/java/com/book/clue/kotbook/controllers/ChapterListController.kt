@@ -16,8 +16,10 @@ import com.book.clue.kotbook.db.Book
 import com.book.clue.kotbook.db.Chapter
 import com.book.clue.kotbook.db.ChapterParagraph
 import com.book.clue.kotbook.managers.BookListManager
+import com.book.clue.kotbook.managers.SharedPrefsManager
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_book_list.view.*
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_chapter_list.view.*
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -26,6 +28,8 @@ class ChapterListController(args: Bundle) : Controller() {
 
     @Inject
     lateinit var bookListManager: BookListManager
+    @Inject
+    lateinit var sharedPrefsManager: SharedPrefsManager
 
     lateinit var chapterListView: RecyclerView
     val book: Book = args.getSerializable(BOOK_KEY) as Book
@@ -52,21 +56,32 @@ class ChapterListController(args: Bundle) : Controller() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         NetworkComponent.get().inject(this)
-        val view = inflater.inflate(R.layout.activity_book_list, container, false)
-        chapterListView = view.book_list
+        val view = inflater.inflate(R.layout.activity_chapter_list, container, false)
+        chapterListView = view.chapter_list
         chapterListView.layoutManager = LinearLayoutManager(inflater.context)
         getChapterList()
         return view
     }
 
     override fun onAttach(view: View) {
+        val id = sharedPrefsManager.getCurrentChapterId()
+        if (id != -1) {
+            bookListManager.getChapterById(id)
+                .subscribeOn(Schedulers.io())
+                .map { chapter ->
+                    view.last_seen_button.setOnClickListener { getChapter(chapter) }
+                    view.last_seen_button.text = chapter.title
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        }
         super.onAttach(view)
         activity?.actionBar?.title = book.name
     }
 
     private fun getChapterList() {
         bookListManager
-        .getChapterList(book.id)
+        .getChapterList(book)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showChapterList)
     }
@@ -75,9 +90,10 @@ class ChapterListController(args: Bundle) : Controller() {
         chapterListView.adapter = ChapterListAdapter(chapterList, this::getChapter)
     }
 
-    private fun getChapter(chapterId: Int) {
+    private fun getChapter(chapter: Chapter) {
+        sharedPrefsManager.saveChapterId(chapter.id)
         view?.loading_progress_bar?.visibility = View.VISIBLE
-        bookListManager.getChapter(chapterId)
+        bookListManager.getChapter(chapter)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayChapter)
     }

@@ -6,4 +6,5 @@
    <string name="shared_prefs">Chapter List</string>
    <string name="chapter_url_key">chapter url</string>
    <string name="bookUrl">bookUrl</string>
+   <string name="last_seen_chapter">Last Seen Chapter</string>
 </resources>

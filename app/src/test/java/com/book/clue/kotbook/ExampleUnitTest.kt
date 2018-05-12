@@ -2,6 +2,7 @@ package com.book.clue.kotbook
 
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
 import org.junit.Test
 
 /**
@@ -14,11 +15,17 @@ class ExampleUnitTest {
     @Test
     fun emptyTest() {
         val list: List<String> = listOf()
+        Maybe.empty<String>()
+        Maybe.error<Exception>(Exception("hi"))
+                .subscribeBy (
+                        onError = { println("error") },
+                        onSuccess = { println(it)} ,
+                        onComplete = { println("complete")}
+                )
 
-        Single.just(list)
-                .filter { it.isNotEmpty() }
-                .switchIfEmpty(Maybe.just(get()))
-                .subscribe { print(it) }
+    }
+
+    fun success(list: List<String>) {
 
     }
 

@@ -8,16 +8,12 @@ import org.junit.Test;
 
 import okhttp3.ResponseBody;
 
-/**
- * Created by long.lam on 1/11/18.
- */
-
 public class jte {
 
    @Test
    public void test() {
       Network network = new Network();
-      network.getWBookApi()
+      network.getGBookApi()
              .getFromUrl("http://gravitytales.com/")
              .map(ResponseBody::string)
              .map(Jsoup::parse)

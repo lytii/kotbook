@@ -23,26 +23,26 @@ class GravityTest {
 //        print(myString)
     }
 
-    @Test
-    fun groupsApi() {
-        val myString: List<Book> = Network().getBookListN().blockingGet()
-        val book: Book = myString.find { it.name.contains("Guardian", true) }
-                ?: Book(1, "", "", "")
-
-        val chapterGroup = Network().getChapterList(book.id)
-                .blockingGet()
-        chapterGroup.forEach { println("C: $it") }
-
-        Observable
-                .just(1, 2, 3)
-                .flatMap { Observable.just(it * 10, it * 100) }
-                .subscribe { println("D: $it") }
-    }
+//    @Test
+//    fun groupsApi() {
+//        val myString: List<Book> = Network().getBookListN().blockingGet()
+//        val book: Book = myString.find { it.name.contains("Guardian", true) }
+//                ?: Book(1, "", "", "")
+//
+//        val chapterGroup = Network().getChapterList(book.id)
+//                .blockingGet()
+//        chapterGroup.forEach { println("C: $it") }
+//
+//        Observable
+//                .just(1, 2, 3)
+//                .flatMap { Observable.just(it * 10, it * 100) }
+//                .subscribe { println("D: $it") }
+//    }
 
     @Test
     fun chapterApi() {
         val chapterId = 22328
-        val string = Network().wBookApi.getChapter(chapterId)
+        val string = Network().gBookApi.getChapter(chapterId)
                 .map(ResponseBody::string)
                 .blockingFirst()
         val c = Gson().fromJson(string, ChapterContent::class.java)

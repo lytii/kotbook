@@ -10,6 +10,6 @@ class ChapterParagraph {
 
     @Relation(parentColumn = "id", entityColumn = "chapterId",
             entity = Paragraph::class, projection = arrayOf("paragraph"))
-    lateinit var chapterParagraphs: List<String>
+    lateinit var paragraphs: List<String>
 
 }

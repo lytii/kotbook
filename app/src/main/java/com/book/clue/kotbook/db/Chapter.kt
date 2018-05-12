@@ -8,8 +8,10 @@ import java.io.Serializable
 @Entity
 data class Chapter(
         @SerializedName("ChapterId") @PrimaryKey val id: Int,
-        @SerializedName("Number") val number: Int,
+        @SerializedName("Number") val number: Float,
         @SerializedName("Name") val title: String,
         @SerializedName("Slug") val suffixUrl: String,
-        var bookId: Int
+        var bookId: Int,
+        var prevUrl: String?,
+        var nextUrl: String?
 ): Serializable

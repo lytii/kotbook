@@ -12,7 +12,7 @@ import kotlin.reflect.KFunction1
 
 class ChapterListAdapter(
         val items: List<Chapter>,
-        val listener: KFunction1<@ParameterName(name = "chapterId") Int, Unit>
+        val listener: KFunction1<@ParameterName(name = "chapter") Chapter, Unit>
 ) : RecyclerView.Adapter<ChapterListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -26,7 +26,7 @@ class ChapterListAdapter(
         holder.title.setOnClickListener {
             val pos = holder.adapterPosition
             if (pos != RecyclerView.NO_POSITION) {
-                listener(items[pos].id)
+                listener(items[pos])
             }
         }
         return holder
